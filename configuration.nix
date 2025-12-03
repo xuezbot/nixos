@@ -15,10 +15,21 @@
 
   # --- 网络设置 ---
   networking.hostName = "nixos-server"; # 对应 flake.nix 里的名字，最好保持一致
-  networking.networkmanager.enable = true;
+  networking.networkmanager.enable = false; # 禁用 NetworkManager 以使用静态 IP
   networking.enableIPv6 = true;
+
+  # 静态 IP 配置 (适配 Proxmox)
+  networking.defaultGateway = "10.0.1.3";
+  networking.nameservers = [ "10.0.1.3" ];
+  networking.interfaces.ens18.ipv4.addresses = [{
+    address = "10.0.1.8";
+    prefixLength = 24;
+  }];
   
   networking.firewall.allowedTCPPorts = [ 80 443 22 ]; 
+
+  # --- QEMU Guest Agent ---
+  services.qemuGuest.enable = true;
 
   # --- 时区与语言 ---
   time.timeZone = "Asia/Shanghai";
