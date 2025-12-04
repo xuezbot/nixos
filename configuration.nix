@@ -10,8 +10,10 @@
   boot.kernel.sysctl."net.ipv4.ip_unprivileged_port_start" = 80;
 
   # --- 引导与内核 ---
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.systemd-boot.enable = false;  # 关掉 UEFI 引导
+  boot.loader.grub.enable = true;           # 开启 GRUB
+  boot.loader.grub.device = "/dev/sda";     # 安装到硬盘 MBR
+  boot.loader.grub.useOSProber = true;
 
   # --- 网络设置 ---
   networking.hostName = "nixos-server"; # 对应 flake.nix 里的名字，最好保持一致
