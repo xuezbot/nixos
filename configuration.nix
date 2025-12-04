@@ -8,6 +8,7 @@
 
   # 允许非特权用户(如 sakuya) 绑定 80/443 端口
   boot.kernel.sysctl."net.ipv4.ip_unprivileged_port_start" = 80;
+  security.sudo.wheelNeedsPassword = false;
 
   # --- 引导与内核 ---
   boot.loader.systemd-boot.enable = false;  # 关掉 UEFI 引导
@@ -51,7 +52,7 @@
   # --- 用户管理 ---
   # Root 密码建议只用于紧急救援
   users.users.root = {
-    initialPassword = "1234"; 
+    hashedPassword = "!"; 
   };
 
   users.users.sakuya = {
@@ -59,9 +60,9 @@
     uid = 1000; # 固定 UID 以便映射 Socket
     description = "Sakuya";
     extraGroups = [ "networkmanager" "wheel" "podman" ]; 
-    initialPassword = "1234"; 
+    hashedPassword = "!"; 
     # 强烈建议尽早配置 SSH Key，配置好后把 PasswordAuthentication 关掉
-    # openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAA..." ]; 
+    openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP9E1CjvIxH9dndDMOgbRQN6b3dmcGFVaipNFlOHLlX/" ]; 
   };
 
   # --- 系统软件包 ---
@@ -86,7 +87,7 @@
     enable = true;
     settings = {
       PermitRootLogin = "no";
-      PasswordAuthentication = true; 
+      PasswordAuthentication = false; 
     };
   };
 
