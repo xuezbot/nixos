@@ -77,7 +77,6 @@
 
   environment.shellAliases = {
     # 以后你想更新系统，只需要输入 "updatenix" 回车
-    # 以后你想更新系统，只需要输入 "updatenix" 回车
     # 注意：请将 YOUR_GIT_REPO_URL 替换为你的实际仓库地址
     updatenix = "if [ ! -d /etc/nixos/.git ]; then sudo rm -rf /etc/nixos/* && sudo git clone https://github.com/xuezbot/nixos /etc/nixos; fi; cd /etc/nixos && git pull && sudo nixos-rebuild switch --flake .#nixos-server";
   };

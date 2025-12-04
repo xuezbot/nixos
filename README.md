@@ -46,3 +46,14 @@
 ```bash
 ./nixos-win/build-vma.sh
 ```
+
+---
+
+<div align="center">
+
+**由 [Gemini 3 Pro](https://deepmind.google/technologies/gemini/) 和 [Antigravity](https://antigravity.google/) 制作**
+
+[![Gemini 3 Pro](https://img.shields.io/badge/Gemini%203%20Pro-8E44AD?style=for-the-badge&logo=google&logoColor=white)](https://deepmind.google/technologies/gemini/)
+[![Antigravity](https://img.shields.io/badge/Antigravity-000000?style=for-the-badge&logo=google&logoColor=white)](https://antigravity.google/)
+
+</div>
