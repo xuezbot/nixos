@@ -76,9 +76,40 @@
     distrobox
   ];
 
-  environment.shellAliases = {
-    updatenix = "if [ ! -d /etc/nixos/.git ]; then sudo rm -rf /etc/nixos/* && sudo git clone https://github.com/xuezbot/nixos /etc/nixos; fi; cd /etc/nixos && sudo git pull && sudo nixos-rebuild switch --flake .#nixos-server";
-  };
+environment.shellAliases = {
+  updatenix = ''
+    # 1. 解决 Git 安全目录报错
+    sudo git config --global --add safe.directory /etc/nixos
+    
+    # 2. 判断是否存在 Git 仓库
+    if [ ! -d /etc/nixos/.git ]; then
+        echo "⚠️  未检测到仓库，正在执行暴力重置..."
+        sudo rm -rf /etc/nixos
+        # 重新克隆
+        sudo git clone https://github.com/xuezbot/nixos /etc/nixos
+    fi
+
+    # 3. 进入目录并强制同步
+    cd /etc/nixos
+    echo "🔄 正在强制同步远程配置..."
+    # 丢弃本地所有修改（包括 flake.lock），防止冲突
+    sudo git reset --hard HEAD
+    # 拉取最新代码
+    sudo git pull
+
+    # 4. 虚拟机保命措施：检查硬件配置
+    # 如果远程仓库里没放 hardware-configuration.nix，这里会自动生成一个
+    # 防止你更新完重启后进不去系统
+    if [ ! -f hardware-configuration.nix ]; then
+        echo "🔧 生成硬件配置..."
+        sudo nixos-generate-config --show-hardware-config | sudo tee hardware-configuration.nix > /dev/null
+    fi
+
+    # 5. 开始构建
+    echo "🚀 开始构建系统..."
+    sudo nixos-rebuild switch --flake .#nixos-server
+  '';
+};
 
   # --- 服务配置 ---
   services.openssh = {
