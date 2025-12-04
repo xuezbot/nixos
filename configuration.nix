@@ -77,8 +77,6 @@
   ];
 
   environment.shellAliases = {
-    # 以后你想更新系统，只需要输入 "updatenix" 回车
-    # 注意：请将 YOUR_GIT_REPO_URL 替换为你的实际仓库地址
     updatenix = "if [ ! -d /etc/nixos/.git ]; then sudo rm -rf /etc/nixos/* && sudo git clone https://github.com/xuezbot/nixos /etc/nixos; fi; cd /etc/nixos && sudo git pull && sudo nixos-rebuild switch --flake .#nixos-server";
   };
 
@@ -90,7 +88,19 @@
       PasswordAuthentication = false; 
     };
   };
+  systemd.services.mount-disk-script = {
+    description = "Run user defined mount script";
+    # 随系统启动
+    wantedBy = [ "multi-user.target" ];
+    after = [ "local-fs.target" ];
+    before = [ "systemd-user-sessions.service" "podman.service" "podman.socket" ];
 
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";      
+      ExecStart = "${pkgs.bash}/bin/bash /home/sakuya/podman/mount_disk.sh";
+    };
+  };
   # --- 虚拟化 (Podman) ---
   virtualisation = {
     containers.enable = true;
@@ -102,8 +112,6 @@
     oci-containers.backend = "podman";
   };
 
-  # 确保 /home/sakuya/podman 目录存在
-  # 1. 开启 Linger (为了让 sakuya 的 Rootless 容器在后台一直跑)
   systemd.tmpfiles.rules = [
     "f /var/lib/systemd/linger/sakuya 0644 root root -"
   ];
