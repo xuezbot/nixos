@@ -23,6 +23,10 @@
         system = "x86_64-linux";
         modules = [
           ./configuration.nix
+          {
+            # 定义磁盘大小 (MB)
+            virtualisation.diskSize = 10240; # 10GB
+          }
         ];
         format = "proxmox";
       };
