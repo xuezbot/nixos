@@ -9,11 +9,6 @@
 
 - **操作系统**: NixOS (基于 Flake)
 - **容器引擎**: Podman (兼容 Docker)
-- **容器管理**: Portainer (可通过 `pd.home.lan` 访问)
-- **反向代理**: Caddy
-  - `home.lan`: 欢迎页面
-  - `pd.home.lan`: Portainer
-  - `*.home.lan`: 泛域名占位符
 - **远程访问**: 已启用 SSH
 
 ## 安装指南

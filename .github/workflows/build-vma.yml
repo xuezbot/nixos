@@ -2,10 +2,15 @@ name: Build VMA Image
 
 on:
   workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   build-vma:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,8 +25,8 @@ jobs:
           SOURCE_DIR: ${{ github.workspace }}
           OUTPUT_DIR: ${{ github.workspace }}
         run: |
-          chmod +x nixos-win/build-vma.sh
-          ./nixos-win/build-vma.sh
+          chmod +x nixos-win/build-cloud.sh
+          ./nixos-win/build-cloud.sh
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -29,3 +34,9 @@ jobs:
           name: nixos-vma-image
           path: "*.vma.zst"
           retention-days: 5
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: "*.vma.zst"
